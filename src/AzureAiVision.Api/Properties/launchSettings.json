@@ -1,0 +1,27 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5045",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "VISION_KEY":"84KIOTrmRUhqJbzrAEuwIjLw1RiIrJRZ1Vlwb1d18SbsS7A23aXhJQQJ99BBAC4f1cMXJ3w3AAAFACOGbSey",
+        "VISION_ENDPOINT": "https://cv-ai-102.cognitiveservices.azure.com/"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "https://localhost:7274;http://localhost:5045",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "VISION_KEY":"84KIOTrmRUhqJbzrAEuwIjLw1RiIrJRZ1Vlwb1d18SbsS7A23aXhJQQJ99BBAC4f1cMXJ3w3AAAFACOGbSey",
+        "VISION_ENDPOINT": "https://cv-ai-102.cognitiveservices.azure.com/"
+      }
+    }
+  }
+}
