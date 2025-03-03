@@ -15,7 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.Configure<AzureCustomVision>(builder.Configuration.GetSection("AzureCustomVision"));
+builder.Services.Configure<AzureComputerVision>(builder.Configuration.GetSection("AzureComputerVision"));
+
 builder.Services.AddScoped<ImageAnalysisService>();
+builder.Services.AddScoped<CustomVisionService>();
 
 var app = builder.Build();
 
@@ -31,54 +34,23 @@ app.UseHttpsRedirection();
 app.MapGet("/analyse-image/by-url", (string url, [FromServices] ImageAnalysisService service) =>
     {
         //"https://learn.microsoft.com/azure/ai-services/computer-vision/media/quickstarts/presentation.png"
-        var endpoint = Environment.GetEnvironmentVariable("VISION_ENDPOINT");
-        var key = Environment.GetEnvironmentVariable("VISION_KEY");
-        var result = service.Analyze(endpoint, key, url);
+        var result = service.Analyze(url);
         return Results.Ok(result);
     })
     .WithName("AnalyzeImageByUrl");
 
-app.MapGet("/image-classification/training", async ([FromServices] IOptions<AzureCustomVision> options) =>
+app.MapGet("/image-classification/training", async ([FromServices] CustomVisionService service) =>
 {
-    var client = new CustomVisionTrainingClient(new Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.ApiKeyServiceClientCredentials(options.Value.TrainingKey))
-    {
-        Endpoint = options.Value.TrainingEndpoint
-    };
-    
-    var project = await client.GetProjectAsync(Guid.Parse(options.Value.ProjectId));
-
-    UploadImages("images/training-images", client, project);
-    
-    var iteration =  client.TrainProject(project.Id);
-
-    return Results.Ok(iteration);
+    var iterationId = service.TrainingAsync();
+    return Results.Ok(iterationId);
 });
 
-app.MapGet("/image-classification/status", async (Guid iterationId, [FromServices] IOptions<AzureCustomVision> options) =>
+app.MapGet("/image-classification/status", async (Guid iterationId, [FromServices] CustomVisionService service) =>
 {
-    var client = new CustomVisionTrainingClient(new Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.ApiKeyServiceClientCredentials(options.Value.TrainingKey))
-    {
-        Endpoint = options.Value.TrainingEndpoint
-    };
-
-    var iteration = await client.GetIterationAsync(Guid.Parse(options.Value.ProjectId), iterationId);
-
-    return Results.Ok(iteration.Status);
+    var status = await service.CheckStatusAsync(iterationId);
+    return Results.Ok(status);
 });
 
 app.Run();
-return;
 
-void UploadImages(string folder, CustomVisionTrainingClient client, Project project)
-{
-    var tags = client.GetTags(project.Id);
-    foreach (var tag in tags)
-    {
-        var images = Directory.GetFiles(Path.Combine(folder, tag.Name));
-        foreach (var image in images)
-        {
-            using var stream = new MemoryStream(File.ReadAllBytes(image));
-            client.CreateImagesFromData(project.Id, stream, [tag.Id]);
-        }
-    }
-}
+

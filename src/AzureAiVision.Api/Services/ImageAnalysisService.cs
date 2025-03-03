@@ -1,17 +1,20 @@
 using Azure;
 using Azure.AI.Vision.ImageAnalysis;
+using AzureAiVision.Api.Models;
+using Microsoft.Extensions.Options;
 
 namespace AzureAiVision.Api.Services;
 
-public class ImageAnalysisService
+public class ImageAnalysisService(IOptions<AzureComputerVision> options)
 {
-    public Response<ImageAnalysisResult> Analyze(string endpoint, string key, string url)
-    {
-        var client = new ImageAnalysisClient(
-            new Uri(endpoint),
-            new AzureKeyCredential(key));
+    private ImageAnalysisClient Client { get; } = new(new Uri(options.Value.VisionEndpoint),
+        new AzureKeyCredential(options.Value.VisionKey));
 
-        var result = client.Analyze(
+    public AzureComputerVision Options { get; set; } = options.Value;
+
+    public Response<ImageAnalysisResult> Analyze(string url)
+    {
+        var result = Client.Analyze(
             new Uri(url),
             VisualFeatures.People,
             new ImageAnalysisOptions { GenderNeutralCaption = true });
