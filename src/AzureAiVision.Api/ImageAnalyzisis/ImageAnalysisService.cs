@@ -3,7 +3,7 @@ using Azure.AI.Vision.ImageAnalysis;
 using AzureAiVision.Api.Models;
 using Microsoft.Extensions.Options;
 
-namespace AzureAiVision.Api.Services;
+namespace AzureAiVision.Api.ImageAnalyzisis;
 
 public class ImageAnalysisService(IOptions<AzureComputerVision> options)
 {

@@ -2,26 +2,24 @@ using AzureAiVision.Api.Models;
 using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training;
 using Microsoft.Extensions.Options;
 
-namespace AzureAiVision.Api.Services;
+namespace AzureAiVision.Api.ImageClassifications;
 
-public class CustomVisionService(IOptions<AzureCustomVision> options)
+public class ImageClassificationService(IOptions<AzureCustomVision> options)
 {
     private CustomVisionTrainingClient Client { get; } = new(new ApiKeyServiceClientCredentials(options.Value.TrainingKey))
     {
         Endpoint = options.Value.TrainingEndpoint
     };
-
-    private AzureCustomVision Options { get; } = options.Value;
-
-    public async Task<string> CheckStatusAsync(Guid iterationId)
+    
+    public async Task<string> CheckStatusAsync(Guid projectId, Guid iterationId)
     {
-        var iteration = await Client.GetIterationAsync(Guid.Parse(Options.ProjectId), iterationId);
+        var iteration = await Client.GetIterationAsync(projectId, iterationId);
         return iteration.Status;
     }
     
-    public async Task<Guid> TrainingAsync()
+    public async Task<Guid> TrainingAsync(Guid projectId)
     {
-        var project = await Client.GetProjectAsync(Guid.Parse(Options.ProjectId));
+        var project = await Client.GetProjectAsync(projectId);
 
         UploadImages("images/training-images", project.Id);
     
