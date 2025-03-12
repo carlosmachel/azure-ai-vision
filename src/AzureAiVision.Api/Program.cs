@@ -7,6 +7,7 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+builder.Services.AddHttpClient();
 builder.Services.Configure<AzureCustomVision>(builder.Configuration.GetSection("AzureCustomVision"));
 builder.Services.Configure<AzureComputerVision>(builder.Configuration.GetSection("AzureComputerVision"));
 
