@@ -13,11 +13,29 @@ public static class ImageAnalysisModule
                 return Results.Ok(result);
             })
             .WithName("AnalyzeImageByUrl");
+        
+        app.MapPost("/analyse-image/by-upload", async (IFormFile image, [FromServices] ImageAnalysisService service) =>
+            {
+                if (image == null || image.Length == 0)
+                {
+                    return Results.BadRequest("Arquivo inválido.");
+                }
+
+                using var memoryStream = new MemoryStream();
+                await image.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+                var binaryData = await BinaryData.FromStreamAsync(memoryStream);
+                var result = service.Analyze(binaryData);
+                
+                return Results.Ok(result);
+            })
+            .DisableAntiforgery()
+            .WithName("AnalyzeImageByUpload");
 
         app.MapGet("/analyse-image/smart-thumbnail", async ([FromQuery] string url, [FromQuery] bool smartCropping, [FromServices] ImageAnalysisService service) =>
         {
-            //https://images.pexels.com/photos/31000796/pexels-photo-31000796/free-photo-of-flying-indian-nightjar-in-natural-habitat.jpeg
-            var result = await service.SmarthThumbnails(500, 500, url, smartCropping);
+            //https://images.pexels.com/photos/2325447/pexels-photo-2325447.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2
+            var result = await service.SmarthThumbnails(100, 100, url, smartCropping);
             return Results.File(result,  "image/jpeg", $"thumbnail{Guid.NewGuid()}.jpg");
         }).WithName("SmartThumbnail");
     }

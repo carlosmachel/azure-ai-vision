@@ -16,7 +16,18 @@ public class ImageAnalysisService(IHttpClientFactory httpClientFactory, IOptions
     {
         var result = Client.Analyze(
             new Uri(url),
-            VisualFeatures.People,
+            VisualFeatures.SmartCrops,
+            new ImageAnalysisOptions { GenderNeutralCaption = true });
+
+        return result;
+
+    }
+    
+    public Response<ImageAnalysisResult> Analyze(BinaryData binaryData)
+    {
+        var result = Client.Analyze(
+            binaryData,
+            VisualFeatures.Read,
             new ImageAnalysisOptions { GenderNeutralCaption = true });
 
         return result;
