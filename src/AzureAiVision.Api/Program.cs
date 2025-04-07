@@ -12,7 +12,8 @@ builder.Services.Configure<AzureCustomVision>(builder.Configuration.GetSection("
 builder.Services.Configure<AzureComputerVision>(builder.Configuration.GetSection("AzureComputerVision"));
 
 builder.Services.AddScoped<ImageAnalysisService>();
-builder.Services.AddScoped<ImageClassificationService>();
+builder.Services.AddScoped<ImageClassificationPredictionService>();
+builder.Services.AddScoped<ImageClassificationTrainingService>();
 
 var app = builder.Build();
 

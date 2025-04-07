@@ -1,4 +1,6 @@
+using AzureAiVision.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace AzureAiVision.Api.ImageClassifications;
 
@@ -8,7 +10,7 @@ public static class ImageClassificationModule
     {
         app.MapGet("/image-classification/training", async (
             [FromQuery] Guid projectId,
-            [FromServices] ImageClassificationService service) =>
+            [FromServices] ImageClassificationTrainingService service) =>
         {
             var iterationId = service.TrainingAsync(projectId);
             return Results.Ok(iterationId);
@@ -17,10 +19,20 @@ public static class ImageClassificationModule
         app.MapGet("/image-classification/status", async (
             [FromQuery] Guid projectId, 
             [FromQuery] Guid iterationId, 
-            [FromServices] ImageClassificationService service) =>
+            [FromServices] ImageClassificationTrainingService service) =>
         {
             var status = await service.CheckStatusAsync(projectId, iterationId);
             return Results.Ok(status);
+        });
+        
+        app.MapGet("/image-classification/classify", async (
+            [FromQuery] Guid projectId,
+            [FromQuery] string projectName,
+            [FromQuery] string url,
+            [FromServices] ImageClassificationPredictionService service) =>
+        {
+            var iterationId = service.ClassifyAsync(projectId, projectName, url);
+            return Results.Ok(iterationId);
         });
     }
 }
