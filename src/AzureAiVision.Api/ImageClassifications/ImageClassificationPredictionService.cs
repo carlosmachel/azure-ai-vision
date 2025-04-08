@@ -5,17 +5,17 @@ using Microsoft.Extensions.Options;
 
 namespace AzureAiVision.Api.ImageClassifications;
 
-public class ImageClassificationPredictionService(IOptions<AzureCustomVision> options)
+public class ImageClassificationPredictionService(IHttpClientFactory httpClientFactory, IOptions<AzureCustomPredictionVision> options)
 {
-    private CustomVisionPredictionClient Client { get; } = new(
-        new ApiKeyServiceClientCredentials(
-            options.Value.TrainingKey));
-    
+    private CustomVisionPredictionClient Client { get; } = new(new ApiKeyServiceClientCredentials(options.Value.Key))
+    {
+        Endpoint = options.Value.Endpoint
+    };
+
     public async Task<ImagePrediction> ClassifyAsync(Guid projectId, string publishedName, string url)
     {
-        var prediction = await Client.ClassifyImageUrlAsync(projectId, publishedName, new ImageUrl(url));
+        var prediction =
+            await Client.ClassifyImageUrlAsync(projectId, publishedName, new ImageUrl(url));
         return prediction;
     }
-    
-   
 }

@@ -6,12 +6,12 @@ using Microsoft.Extensions.Options;
 
 namespace AzureAiVision.Api.ObjectDetections;
 
-public class ObjectDetectionService(IOptions<AzureCustomVision> options)
+public class ObjectDetectionTrainingService(IOptions<AzureCustomTrainingVision> options)
 {
     private CustomVisionTrainingClient Client { get; } =
-        new(new ApiKeyServiceClientCredentials(options.Value.TrainingKey))
+        new(new ApiKeyServiceClientCredentials(options.Value.Key))
         {
-            Endpoint = options.Value.TrainingEndpoint
+            Endpoint = options.Value.Endpoint
         };
 
 

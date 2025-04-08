@@ -8,7 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 builder.Services.AddHttpClient();
-builder.Services.Configure<AzureCustomVision>(builder.Configuration.GetSection("AzureCustomVision"));
+builder.Services.Configure<AzureCustomPredictionVision>(builder.Configuration.GetSection("AzureCustomPredictionVision"));
+builder.Services.Configure<AzureCustomTrainingVision>(builder.Configuration.GetSection("AzureCustomTrainingVision"));
 builder.Services.Configure<AzureComputerVision>(builder.Configuration.GetSection("AzureComputerVision"));
 
 builder.Services.AddScoped<ImageAnalysisService>();

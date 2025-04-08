@@ -8,10 +8,20 @@ public static class ObjectDetectionModule
     {
         app.MapGet("/object-detection/upload-images", async (
             [FromQuery] Guid projectId,
-            [FromServices] ObjectDetectionService service) =>
+            [FromServices] ObjectDetectionTrainingService service) =>
         {
             var result = await service.UploadImagesAsync(projectId);
             return Results.Ok(result);
+        });
+        
+        app.MapGet("/object-detection/classify", async (
+            [FromQuery] Guid projectId,
+            [FromQuery] string projectName,
+            [FromQuery] string url,
+            [FromServices] ObjectDetectionPredictionService service) =>
+        {
+            var iterationId = service.ClassifyAsync(projectId, projectName, url);
+            return Results.Ok(iterationId);
         });
     }
 } 

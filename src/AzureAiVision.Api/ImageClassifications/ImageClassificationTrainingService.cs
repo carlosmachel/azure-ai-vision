@@ -10,11 +10,11 @@ public class ProjectResult
     public Guid Id { get; set; }
 }
 
-public class ImageClassificationTrainingService(IOptions<AzureCustomVision> options)
+public class ImageClassificationTrainingService(IOptions<AzureCustomTrainingVision> options)
 {
-    private CustomVisionTrainingClient Client { get; } = new(new ApiKeyServiceClientCredentials(options.Value.TrainingKey))
+    private CustomVisionTrainingClient Client { get; } = new(new ApiKeyServiceClientCredentials(options.Value.Key))
     {
-        Endpoint = options.Value.TrainingEndpoint
+        Endpoint = options.Value.Endpoint
     };
     
     public async Task<string> CheckStatusAsync(Guid projectId, Guid iterationId)

@@ -12,7 +12,7 @@ public static class ImageClassificationModule
             [FromQuery] Guid projectId,
             [FromServices] ImageClassificationTrainingService service) =>
         {
-            var iterationId = service.TrainingAsync(projectId);
+            var iterationId = await service.TrainingAsync(projectId);
             return Results.Ok(iterationId);
         });
 
@@ -31,7 +31,7 @@ public static class ImageClassificationModule
             [FromQuery] string url,
             [FromServices] ImageClassificationPredictionService service) =>
         {
-            var iterationId = service.ClassifyAsync(projectId, projectName, url);
+            var iterationId =  await service.ClassifyAsync(projectId, projectName, url);
             return Results.Ok(iterationId);
         });
     }
