@@ -16,6 +16,9 @@ builder.Services.AddScoped<ImageAnalysisService>();
 builder.Services.AddScoped<ImageClassificationPredictionService>();
 builder.Services.AddScoped<ImageClassificationTrainingService>();
 
+builder.Services.AddScoped<ObjectDetectionPredictionService>();
+builder.Services.AddScoped<ObjectDetectionTrainingService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

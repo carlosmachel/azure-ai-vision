@@ -1,6 +1,5 @@
 using AzureAiVision.Api.Models;
 using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training;
-using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.Models;
 using Microsoft.Extensions.Options;
 
 namespace AzureAiVision.Api.ImageClassifications;

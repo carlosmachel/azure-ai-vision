@@ -14,6 +14,14 @@ public static class ObjectDetectionModule
             return Results.Ok(result);
         });
         
+        app.MapGet("/object-detection/training", async (
+            [FromQuery] Guid projectId,
+            [FromServices] ObjectDetectionTrainingService service) =>
+        {
+            var result = await service.TrainingAsync(projectId);
+            return Results.Ok(result);
+        });
+        
         app.MapGet("/object-detection/classify", async (
             [FromQuery] Guid projectId,
             [FromQuery] string projectName,

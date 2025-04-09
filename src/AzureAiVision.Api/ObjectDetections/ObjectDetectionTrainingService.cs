@@ -13,7 +13,12 @@ public class ObjectDetectionTrainingService(IOptions<AzureCustomTrainingVision> 
         {
             Endpoint = options.Value.Endpoint
         };
-
+    
+    public async Task<Guid> TrainingAsync(Guid projectId)
+    {
+        var iteration = await Client.TrainProjectAsync(projectId);
+        return iteration.Id;
+    }
 
     public async Task<ImageCreateSummary> UploadImagesAsync(Guid projectId)
     {
