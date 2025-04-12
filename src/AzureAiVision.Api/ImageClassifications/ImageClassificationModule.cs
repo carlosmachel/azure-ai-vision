@@ -14,7 +14,8 @@ public static class ImageClassificationModule
         {
             var iterationId = await service.TrainingAsync(projectId);
             return Results.Ok(iterationId);
-        });
+        })
+        .WithTags("Image Classification");
 
         app.MapGet("/image-classification/status", async (
             [FromQuery] Guid projectId, 
@@ -23,7 +24,8 @@ public static class ImageClassificationModule
         {
             var status = await service.CheckStatusAsync(projectId, iterationId);
             return Results.Ok(status);
-        });
+        })
+        .WithTags("Image Classification");
         
         app.MapGet("/image-classification/classify", async (
             [FromQuery] Guid projectId,
@@ -33,6 +35,7 @@ public static class ImageClassificationModule
         {
             var iterationId =  await service.ClassifyAsync(projectId, projectName, url);
             return Results.Ok(iterationId);
-        });
+        })
+        .WithTags("Image Classification");
     }
 }

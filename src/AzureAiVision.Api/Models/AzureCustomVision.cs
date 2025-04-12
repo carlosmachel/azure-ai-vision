@@ -14,3 +14,9 @@ public class AzureComputerVision
     public string VisionEndpoint { get; set; }
     public string VisionKey { get; set; }
 }
+
+public class AzureFaceApi
+{
+    public string Key { get; set; }
+    public string Endpoint { get; set; }
+}
